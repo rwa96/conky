@@ -5,7 +5,7 @@ conky.config = {
     no_buffers=true,                -- Subtract (file system) buffers from used memory
     out_to_console=false,           -- No console output
     update_interval=1,              -- Refreshrate in seconds
-    cpu_avg_samples=1,
+    cpu_avg_samples=3,
 
     -- Positioning
     alignment='tl',                 -- Alignement
