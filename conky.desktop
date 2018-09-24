@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
 Name=conky
-Exec=~/.conky/conky.sh
+Exec=/home/robin/.conky/conky.bash
 StartupNotify=false
 Terminal=false

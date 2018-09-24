@@ -1,6 +1,5 @@
 conky.config = {
     -- General
-    background=true,                -- run in background
     total_run_times=0,              -- Total number of times for Conky to update before quitting (0 makes Conky run forever)
     double_buffer=true,             -- Use the Xdbe extension? (eliminates flicker)
     no_buffers=true,                -- Subtract (file system) buffers from used memory
@@ -27,9 +26,9 @@ conky.config = {
 
     -- Custom script
     lua_load=                       -- Loads the Lua scripts separated by spaces.
-        './scripts/utils.lua '
-    ..  './scripts/cairo_wrapper.lua '
-    ..  './scripts/clock.lua',
+        '~/.conky/scripts/utils.lua '
+    ..  '~/.conky/scripts/cairo_wrapper.lua '
+    ..  '~/.conky/scripts/clock.lua',
     lua_draw_hook_pre='main',       -- Called each iteration before drawing to the window
 }
 
