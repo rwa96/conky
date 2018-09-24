@@ -1,23 +1,20 @@
 conky.config = {
     -- General
+    background=true,                -- run in background
     total_run_times=0,              -- Total number of times for Conky to update before quitting (0 makes Conky run forever)
     double_buffer=true,             -- Use the Xdbe extension? (eliminates flicker)
     no_buffers=true,                -- Subtract (file system) buffers from used memory
-    text_buffer_size=1024,          -- Cache size for text
     out_to_console=false,           -- No console output
     update_interval=1,              -- Refreshrate in seconds
+    cpu_avg_samples=1,
 
     -- Positioning
-    alignment='tr',                 -- Alignement
-    minimum_width=1900,              -- Minimum width in px
-    minimum_height=1060,             -- Minimum height in px
-    maximum_width=1900,              -- Maximum width in px
-    gap_x=10,                       -- Gap, in pixels, between right or left border of screen
-    gap_y=10,                       -- Gap, in pixels, between top or bottom border of screen
-
-    -- Border
---    border_width=1,
---    draw_borders=true,
+    alignment='tl',                 -- Alignement
+    minimum_width=400,              -- Minimum width in px
+    minimum_height=400,             -- Minimum height in px
+    maximum_width=400,              -- Maximum width in px
+    gap_x=50,                       -- Gap, in pixels, between right or left border of screen
+    gap_y=50,                       -- Gap, in pixels, between top or bottom border of screen
 
     -- Font
     use_xft=true,                   -- Use Xft (anti-aliased font and stuff)
@@ -30,7 +27,10 @@ conky.config = {
     own_window_transparent=true,    -- Set transparency
 
     -- Custom script
-    lua_load='./scripts/main.lua',  -- Loads the Lua scripts separated by spaces.
+    lua_load=                       -- Loads the Lua scripts separated by spaces.
+        './scripts/utils.lua '
+    ..  './scripts/cairo_wrapper.lua '
+    ..  './scripts/cpu.lua',
     lua_draw_hook_pre='main',       -- Called each iteration before drawing to the window
 }
 

@@ -1,4 +1,4 @@
-return {
+Utils = {
 
     -- Converts color strings like #FFF or FFFFFF to
     -- rgb values ranging from 0 to 1

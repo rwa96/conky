@@ -1,21 +1,26 @@
-local Text = require 'scripts/drawables/text'
-local Line = require 'scripts/drawables/line'
-local Arc = require "scripts/drawables/arc"
-local Rectangle = require "scripts/drawables/rectangle"
-local Utils = require 'scripts/utils'
+-- params for alendar showing the current month
+params = {
+    -- top left {x,y}
+    pos={0,0},
+    -- width and height
+    size=250,
+    -- hex color
+    color="#FFF",
+    -- font family
+    font="mono",
+    -- font size of small text
+    font_size_small=12,
+    -- font size of large text
+    font_size_large=18
+}
 
--- Creates a calendar showing the current month
---
--- @param pos table (top left {x,y})
--- @param size number (width and height)
--- @param color string (hex color)
--- @param font string (font family)
--- @param font_size_small number (font size of small text)
--- @param font_size_large number (font size of large text)
--- @returns ... (drawable objects)
-return function (params)
+function conky_main()
+    if conky_window == nil then
+        return
+    end
+
     local title_h = 3*params.font_size_large/2
-    local size = params.size
+    local size = params.size-4
     local text_h = params.font_size_small
     local header_h = title_h + 2*text_h
     local body_h = size - header_h
@@ -23,7 +28,7 @@ return function (params)
     local v_offset = 1*body_h / 24
     local h_offset = (size - 7*day_size) / 6
     local y_start = params.pos[2] + header_h + v_offset + day_size/2
-    local x_start = params.pos[1] + day_size/2
+    local x_start = params.pos[1] + day_size/2 + 4
     local rgb = {Utils.hex2rgb(params.color)}
 
     local week_days = {"MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"}
@@ -35,7 +40,7 @@ return function (params)
 
     -- Gradient background of title
     table.insert(drv, Rectangle:new{
-        pos=params.pos,
+        pos={params.pos[1]+4, params.pos[2]},
         width=size,
         height=title_h,
         fill_type="fill",
@@ -49,7 +54,7 @@ return function (params)
 
     -- Position of top horizontal line (title)
     table.insert(drv, Line:new{
-        pos={params.pos[1], params.pos[2]+1},
+        pos={params.pos[1]+4, params.pos[2]+1},
         end_pos={size,0},
         color={Utils.create_linear(
             {0,0}, {size,0},
@@ -62,7 +67,7 @@ return function (params)
 
     -- Position of bottom horizontal line (title)
     table.insert(drv, Line:new{
-        pos={params.pos[1], params.pos[2]+title_h},
+        pos={params.pos[1]+4, params.pos[2]+title_h},
         end_pos={size,0},
         color={Utils.create_linear(
             {0,0}, {size,0},
@@ -75,7 +80,7 @@ return function (params)
 
     -- Title text <Month> <Year>
     table.insert(drv, Text:new{
-        pos={params.pos[1]+size/2, params.pos[2]+title_h/2},
+        pos={params.pos[1]+4+size/2, params.pos[2]+title_h/2},
         text = os.date("%B %Y"),
         color={Utils.create_rgba(rgb[1], rgb[2], rgb[3], 1)},
         font = params.font,
@@ -86,7 +91,7 @@ return function (params)
 
     -- Dividing line
     table.insert(drv, Line:new{
-        pos={params.pos[1], params.pos[2]+header_h},
+        pos={params.pos[1]+4, params.pos[2]+header_h},
         end_pos={size,0},
         color={Utils.create_linear(
             {0,0}, {size,0},
@@ -101,7 +106,7 @@ return function (params)
     for i, v in ipairs(week_days) do
         local start_p = (i-1) * (day_size + h_offset)
         table.insert(drv, Text:new{
-            pos={params.pos[1]+start_p+day_size/2, params.pos[2]+header_h-text_h},
+            pos={params.pos[1]+start_p+day_size/2+4, params.pos[2]+header_h-text_h},
             text = week_days[i],
             color={Utils.create_rgba(rgb[1], rgb[2], rgb[3], 1)},
             font = params.font,
@@ -119,8 +124,8 @@ return function (params)
         local ind = z_m_d + z_first_week_day
         local z_x_ind = ind % 7
         local z_y_ind = math.floor(ind / 7)
-        local x_pos = x_start + z_x_ind*(day_size+h_offset)
-        local y_pos = y_start + z_y_ind*(day_size+v_offset)
+        local x_pos = x_start + z_x_ind*(day_size+h_offset) +4
+        local y_pos = y_start + z_y_ind*(day_size+v_offset) +4
 
         if z_m_d == today.day-1 then width = 4 end
         if z_x_ind == 6 then
@@ -150,5 +155,7 @@ return function (params)
         })
     end
 
-    return unpack(drv)
+    local cnv = Canvas:new(conky_window, drv)
+    cnv:display()
+    cnv:destroy()
 end
