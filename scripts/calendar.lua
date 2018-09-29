@@ -131,7 +131,7 @@ function conky_main()
         if z_x_ind == 6 then
             m_fill_type = "both"
             m_color = {
-                Utils.create_rgba(rgb[1], rgb[2], rgb[3], .1),
+                Utils.create_rgba(rgb[1], rgb[2], rgb[3], .2),
                 Utils.create_rgba(rgb[1], rgb[2], rgb[3], 1)
             }
         end

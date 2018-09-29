@@ -4,15 +4,15 @@ conky.config = {
     double_buffer=true,             -- Use the Xdbe extension? (eliminates flicker)
     no_buffers=true,                -- Subtract (file system) buffers from used memory
     out_to_console=false,           -- No console output
-    update_interval=1800,           -- Refreshrate in seconds
+    update_interval=360,            -- Refreshrate in seconds
 
     -- Positioning
-    alignment='tr',                 -- Alignement
-    minimum_width=250,              -- Minimum width in px
-    minimum_height=250,             -- Minimum height in px
-    maximum_width=250,              -- Maximum width in px
+    alignment='bl',                 -- Alignement
+    minimum_width=400,              -- Minimum width in px
+    minimum_height=300,             -- Minimum height in px
+    maximum_width=400,              -- Maximum width in px
     gap_x=50,                       -- Gap, in pixels, between right or left border of screen
-    gap_y=350,                      -- Gap, in pixels, between top or bottom border of screen
+    gap_y=50,                       -- Gap, in pixels, between top or bottom border of screen
 
     -- Font
     use_xft=true,                   -- Use Xft (anti-aliased font and stuff)
@@ -26,9 +26,9 @@ conky.config = {
 
     -- Custom script
     lua_load=                       -- Loads the Lua scripts separated by spaces.
-        '~/.conky/scripts/utils.lua '
-    ..  '~/.conky/scripts/cairo_wrapper.lua '
-    ..  '~/.conky/scripts/calendar.lua',
+        './scripts/utils.lua '
+    ..  './scripts/cairo_wrapper.lua '
+    ..  './scripts/battery.lua',
     lua_draw_hook_pre='main',       -- Called each iteration before drawing to the window
 }
 

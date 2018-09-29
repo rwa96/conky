@@ -85,8 +85,8 @@ function conky_main ()
         fill_type="fill",
         color={Utils.create_radial(
             {0,0}, min_r - 7*bar_w/8, {0,0}, (min_r - 7*bar_w/8)/2,
-            {0, fill_rgb[1], fill_rgb[2], fill_rgb[3], .3},
-            {1, fill_rgb[1], fill_rgb[2], fill_rgb[3], .1}
+            {0, fill_rgb[1], fill_rgb[2], fill_rgb[3], .2},
+            {1, fill_rgb[1], fill_rgb[2], fill_rgb[3], 0}
         )},
     })
 
