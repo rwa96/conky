@@ -114,6 +114,8 @@ function conky_main()
             color={Utils.create_rgba(fill_rgb[1], fill_rgb[2], fill_rgb[3], 1)},
             font = params.font,
             font_size = params.font_size_small,
+            font_slant = CAIRO_FONT_SLANT_BOLD,
+            font_face = CAIRO_FONT_WEIGHT_BOLD,
             hoz = "center",
             vert = false,
         }
