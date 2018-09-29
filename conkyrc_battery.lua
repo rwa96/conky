@@ -26,9 +26,9 @@ conky.config = {
 
     -- Custom script
     lua_load=                       -- Loads the Lua scripts separated by spaces.
-        './scripts/utils.lua '
-    ..  './scripts/cairo_wrapper.lua '
-    ..  './scripts/battery.lua',
+        '~/.conky/scripts/utils.lua '
+    ..  '~/.conky/scripts/cairo_wrapper.lua '
+    ..  '~/.conky/scripts/battery.lua',
     lua_draw_hook_pre='main',       -- Called each iteration before drawing to the window
 }
 
