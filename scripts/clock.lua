@@ -74,7 +74,7 @@ function conky_main()
             line_width=params.hour_width,
             radius=hour_r,
             color={Utils.create_rgba(fill_rgb[1], fill_rgb[2], fill_rgb[3], 1)},
-            segment={dir="clock", 0, 360 * (current_time.hour/23)},
+            segment={dir="clock", 0, 360 * ((current_time.hour % 12) / 12)},
             close_path=false
         },
         Arc:new{
