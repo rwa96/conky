@@ -4,7 +4,7 @@ conky.config = {
     double_buffer=true,             -- Use the Xdbe extension? (eliminates flicker)
     no_buffers=true,                -- Subtract (file system) buffers from used memory
     out_to_console=false,           -- No console output
-    update_interval=360,            -- Refreshrate in seconds
+    update_interval=300,            -- Refreshrate in seconds
 
     -- Positioning
     alignment='bl',                 -- Alignement

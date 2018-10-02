@@ -15,7 +15,9 @@ params = {
     -- number of marks on x_axis
     x_steps=4,
     -- maximum number of recorded datapoints
-    max_x_points=48,
+    max_x_points=24,
+    -- min time difference between points
+    delta_t=1,
     -- file to cache data points
     cache_file="/tmp/conky_battery.cache"
 }
@@ -29,13 +31,17 @@ return {
 --
 -- @param new_val table (new data entry {x, y})
 -- @param val_num_max number (maximum number of data entries)
+-- @param delta_t number (minimum delay between cache file updates)
 -- @param file_path string (path for cache file, preferably in tmp folder)
 -- @returns table (all cached points including new one)
-function history(new_val, val_num_max, file_path)
+function history(new_val, val_num_max, delta_t, file_path)
     local f = loadfile(file_path)
     local hist_data = {}
     if f ~= nil then hist_data = f() end
-    table.insert(hist_data, new_val)
+
+    if table.getn(hist_data) == 0 or new_val[1] - hist_data[table.getn(hist_data)][1] > delta_t then
+        table.insert(hist_data, new_val)
+    end
 
     while table.getn(hist_data) > val_num_max do
         table.remove(hist_data, 1)
@@ -67,17 +73,11 @@ function conky_main()
 
     local points = history(
         {os.time(), tonumber(conky_parse("${battery_percent}"))},
-        params.max_x_points, params.cache_file
+        params.max_x_points, params.delta_t, params.cache_file
     )
 
-    local max_y = 0
-    local min_y = 100
     local min_x = points[1][1]
     local max_x = points[table.getn(points)][1]
-    for i, point in ipairs(points) do
-        if max_y < point[2] then max_y = point[2] end
-        if min_y > point[2] then min_y = point[2] end
-    end
 
     local rgb = {Utils.hex2rgb(params.color)}
     local text_w = 3 * params.font_size_small
@@ -86,7 +86,7 @@ function conky_main()
     local grid_start_x = params.pos[1] + 3
     local grid_start_y = params.pos[2] + 8 + params.font_size_large
 
-    local px_per_y_unit = grid_height / math.max(1, (max_y - min_y))
+    local px_per_y_unit = grid_height / 100
     local px_per_x_unit = grid_width / math.max(1, (max_x - min_x))
 
 
@@ -98,13 +98,17 @@ function conky_main()
         local grad_x = (grid_width/grad_m - grid_height) / (grad_m + 1/grad_m)
         local grad_y = grad_x * grad_m
 
-        local multiline = {t="multiline", {0, 0}}
+        local multiline = {t="multiline"}
         for i, p in ipairs(points) do
-            table.insert(multiline, {
-                (p[1] - min_x) * px_per_x_unit,
-                -((p[2] - min_y) * px_per_y_unit)
-            })
+            local x = (p[1] - min_x) * px_per_x_unit
+            local y = -p[2] * px_per_y_unit
+            if y == 0 then y = -grid_height end -- y should never be zero (display max value in case of error)
+            table.insert(multiline, {x, y})
         end
+        table.insert(multiline, {
+            grid_width,
+            -(points[table.getn(points)][2] * px_per_y_unit)
+        })
         table.insert(multiline, {grid_width, 0})
         table.insert(drv, Polygon:new{
             pos={grid_start_x, grid_start_y+grid_height},
@@ -131,7 +135,7 @@ function conky_main()
     -- y axis marks
     do
         local offset = grid_height / params.y_steps
-        local dy = (max_y - min_y) / params.y_steps
+        local dy = 100 / params.y_steps
         for y_step = 0,params.y_steps do
             table.insert(drv, Line:new{
                 pos={grid_start_x+grid_width-4, grid_start_y+grid_height - (y_step*offset +1)},
@@ -141,7 +145,7 @@ function conky_main()
             })
             table.insert(drv, Text:new{
                 pos={grid_start_x+grid_width+4, grid_start_y+grid_height - y_step*offset},
-                text = string.format("%d%%", min_y + dy*y_step),
+                text = string.format("%d%%", dy*y_step),
                 color={Utils.create_rgba(rgb[1], rgb[2], rgb[3], 1)},
                 font = params.font,
                 font_size = params.font_size_small,
@@ -152,7 +156,7 @@ function conky_main()
     -- x axis marks
     do
         local offset = grid_width / params.x_steps
-        local dx = (max_x - min_x) / params.x_steps
+        local dx = math.max(1, (max_x - min_x)) / params.x_steps
         for x_step = 0,params.x_steps-1 do
             table.insert(drv, Line:new{
                 pos={grid_start_x+1+x_step*offset, grid_start_y+grid_height - 4},
