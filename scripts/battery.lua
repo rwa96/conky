@@ -99,16 +99,14 @@ function conky_main()
         local grad_y = grad_x * grad_m
 
         local multiline = {t="multiline"}
+        local x = 0; local y = 0
         for i, p in ipairs(points) do
-            local x = (p[1] - min_x) * px_per_x_unit
-            local y = -p[2] * px_per_y_unit
+            x = (p[1] - min_x) * px_per_x_unit
+            y = -p[2] * px_per_y_unit
             if y == 0 then y = -grid_height end -- y should never be zero (display max value in case of error)
             table.insert(multiline, {x, y})
         end
-        table.insert(multiline, {
-            grid_width,
-            -(points[table.getn(points)][2] * px_per_y_unit)
-        })
+        table.insert(multiline, {grid_width,y})
         table.insert(multiline, {grid_width, 0})
         table.insert(drv, Polygon:new{
             pos={grid_start_x, grid_start_y+grid_height},
