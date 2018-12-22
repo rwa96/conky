@@ -164,7 +164,7 @@ function conky_main()
             })
             table.insert(drv, Text:new{
                 pos={grid_start_x+1+x_step*offset, grid_start_y+grid_height + 4 + params.font_size_small},
-                text = os.date("%I:%M", min_x + dx*x_step),
+                text = os.date("%H:%M", min_x + dx*x_step),
                 color={Utils.create_rgba(rgb[1], rgb[2], rgb[3], 1)},
                 font = params.font,
                 font_size = params.font_size_small,
